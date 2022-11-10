@@ -1,0 +1,21 @@
+{
+  "label": "Amazon Redshift Administration",
+  "category_label": "Models",
+  "branding": {
+    "image_uri": "https://wwwstatic-a.lookercdn.com/blocks/logos/aws.png",
+    "tagline": "Fine-tune your Redshift deployment with a comprehensive view of performance and query analysis."
+  },
+
+  "constants": {
+    "CONNECTION_NAME": {
+      "label": "Connection Name",
+      "value_constraint": "connection"
+    }
+  },
+  "models": [
+    {
+      "name": "block_redshift_admin_v2",
+      "connection_constant": "CONNECTION_NAME"
+    }
+  ]
+}
