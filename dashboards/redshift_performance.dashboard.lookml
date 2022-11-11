@@ -34,7 +34,6 @@
     sorts: [redshift_queries.total_time_executing desc]
     limit: 50
     column_limit: 50
-    query_timezone: America/Los_Angeles
     show_view_names: false
     show_row_numbers: true
     truncate_column_names: false
@@ -76,7 +75,6 @@
     sorts: [redshift_queries.time_executing_tier]
     limit: 500
     column_limit: 50
-    query_timezone: America/Los_Angeles
     color_application:
       collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
       palette_id: ccba75a3-58c7-4b9c-a931-4ffc59e79cba
@@ -132,7 +130,6 @@
     sorts: [redshift_queries.total_time_executing desc]
     limit: 10
     column_limit: 50
-    query_timezone: America/Los_Angeles
     color_application:
       collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
       palette_id: ccba75a3-58c7-4b9c-a931-4ffc59e79cba
@@ -198,7 +195,6 @@
     sorts: [redshift_queries.total_time_executing desc]
     limit: 500
     column_limit: 50
-    query_timezone: America/Los_Angeles
     value_labels: labels
     label_type: labPer
     color_application:
@@ -236,7 +232,6 @@
     column_limit: 50
     dynamic_fields: [{table_calculation: minutes_queued, label: Minutes Queued, expression: "${redshift_queries.total_time_in_queue}/60",
         value_format: !!null '', value_format_name: decimal_1}]
-    query_timezone: America/Los_Angeles
     color_application:
       collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
       palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3

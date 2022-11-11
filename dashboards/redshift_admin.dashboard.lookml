@@ -2,7 +2,6 @@
   preferred_viewer: dashboards-next
   title: Redshift Admin
   layout: newspaper
-  query_timezone: query_saved
   elements:
   - title: Table Load Summary
     name: Table Load Summary
