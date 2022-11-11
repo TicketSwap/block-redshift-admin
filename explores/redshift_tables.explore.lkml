@@ -1,5 +1,6 @@
 include: "/views/*.view"
 explore: redshift_tables {
+  hidden: yes
   view_label: "[Redshift Tables]"
   join: redshift_query_execution {
     sql_on: ${redshift_query_execution.table_join_key}=${redshift_tables.table_join_key};;

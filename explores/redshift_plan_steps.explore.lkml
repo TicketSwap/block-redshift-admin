@@ -1,5 +1,6 @@
 include: "/views/*.view"
 explore: redshift_plan_steps {
+  hidden: yes
   join: redshift_tables {
     sql_on: ${redshift_tables.table}=${redshift_plan_steps.table} ;;
     type: left_outer
