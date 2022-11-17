@@ -5,31 +5,22 @@ view: redshift_queries {
     distribution: "query"
     sortkeys: ["query"]
     sql: SELECT DISTINCT
-        wlm.query,
-        COALESCE(qlong.querytxt,q.substring)::varchar as text,
-        SUBSTRING(
-          REGEXP_REPLACE(COALESCE(qlong.querytxt,q.substring)::varchar,'^\\s*-- ([A-Za-z ]*''\\{[^}]*\\}''.|Building [^ ]+( in dev mode)? on instance [0-9a-f]+.)','')
-          ,1,100) as snippet,
-        CASE
-          WHEN COALESCE(qlong.querytxt,q.substring)::varchar NOT ILIKE '-- Building %'
-          THEN 'No'
-          WHEN COALESCE(qlong.querytxt,q.substring)::varchar ILIKE '% in dev mode on instance %'
-          THEN 'Dev'
-          ELSE 'Prod'
-          END as pdt,
-        REGEXP_SUBSTR(COALESCE(qlong.querytxt,q.substring)::varchar,'^\\s*-- [A-Za-z ]*''\\{[^}]*"user_id":(\\d+)',1,1,'e') as looker_user_id,
-        REGEXP_SUBSTR(COALESCE(qlong.querytxt,q.substring)::varchar,'^\\s*-- [A-Za-z ]*''\\{[^}]*"history_id":(\\d+)',1,1,'e') as looker_history_id,
-        REGEXP_SUBSTR(COALESCE(qlong.querytxt,q.substring)::varchar,'^\\s*-- [^}]*instance_?s?l?u?g?"?:?"? ?([0-9a-f]+)',1,1,'e') as looker_instance_slug,
-        sc.name as service_class,
+        query,
+        snippet,
+        pdt
+        looker_user_id,
+        looker_history_id,
+        looker_instance_slug,
+        service_class,
         --wlm.service_class as service_class, --Use if connection was not given access to STV_WLM_SERVICE_CLASS_CONFIG
-        wlm.service_class_start_time as start_time,
-        wlm.total_queue_time,
-        wlm.total_exec_time,
-        q.elapsed, --Hmm.. this measure seems to be greater than queue_time+exec_time,
-        ROW_NUMBER() OVER () AS pk
+        start_time,
+        total_queue_time,
+        total_exec_time,
+        elapsed, --Hmm.. this measure seems to be greater than queue_time+exec_time,
+        pk
       FROM history.hist_redshift_query_view
-      WHERE wlm.service_class_start_time >= dateadd(day,-1,GETDATE())
-      AND wlm.service_class_start_time <= GETDATE()
+      WHERE start_time >= dateadd(day,-1,GETDATE())
+      AND start_time <= GETDATE()
     ;;
     #STL_QUERY vs SVL_QLOG. STL_QUERY has more characters of query text (4000), but is only retained for "2 to 5 days"
     # STL_WLM_QUERY or SVL_QUERY_QUEUE_INFO? http://docs.aws.amazon.com/redshift/latest/dg/r_SVL_QUERY_QUEUE_INFO.html
