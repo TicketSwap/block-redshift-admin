@@ -6,6 +6,7 @@ view: redshift_queries {
     sortkeys: ["query"]
     sql: SELECT DISTINCT
         query,
+        text,
         snippet,
         pdt,
         looker_user_id,
