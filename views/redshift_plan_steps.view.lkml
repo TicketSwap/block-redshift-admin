@@ -20,7 +20,7 @@ view: redshift_plan_steps {
           inner_outer,
           sum_children_cost,
           incremental_step_cost,
-          ROW_NUMBER() OVER (ORDER BY starttime) as pk,
+          ROW_NUMBER() OVER (ORDER BY query, starttime) as pk,
           starttime,
           endtime
         FROM history.hist_redshift_plan_steps_view

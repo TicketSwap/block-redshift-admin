@@ -6,37 +6,26 @@ view: redshift_query_execution {
     sortkeys: ["query"]
     sql:
         SELECT
-          query ||'.'|| seg || '.' || step as id,
-          query as query, seg, step,
-          label::varchar,
-          regexp_substr(label, '^[A-Za-z]+')::varchar as operation,
-          CASE WHEN label ilike 'scan%name=%' AND label not ilike '%Internal Worktable'
-              THEN substring(regexp_substr(label, 'name=(.+)$'),6)
-              ELSE NULL
-          END::varchar as "table",
-          CASE WHEN label ilike 'scan%tbl=%'
-              THEN ('0'+COALESCE(substring(regexp_substr(label, 'tbl=([0-9]+)'),5),''))::int
-              ELSE NULL
-          END as "table_id",
-          CASE WHEN label ilike 'scan%tbl=%'
-               THEN CASE WHEN label ilike '%name=%LR$%'
-                         THEN 'name:'||substring(regexp_substr(label, 'name=(.+)$'),6)
-                         ELSE 'id:'||COALESCE(substring(regexp_substr(label, 'tbl=([0-9]+)'),5),'')
-                         END
-               ELSE NULL
-               END::varchar
-          as "table_join_key",
-          MAX(is_diskbased) as is_diskbased,
-          MAX(is_rrscan) as is_rrscan,
-          AVG(avgtime) as avgtime,
-          MAX(maxtime) as maxtime,
-          SUM(workmem) as workmem,
-          SUM(rows_pre_filter) rows_pre_filter,
-          SUM(bytes) as bytes
-        FROM svl_query_summary
-        WHERE query>=(SELECT min(query) FROM ${redshift_queries.SQL_TABLE_NAME})
-        AND query<=(SELECT max(query) FROM ${redshift_queries.SQL_TABLE_NAME})
-        GROUP BY query, seg, step, label
+          id,
+          query,
+          seg,
+          step,
+          label,
+          operation,
+          "table",
+          "table_id",
+          "table_join_key",
+          is_diskbased,
+          is_rrscan,
+          avgtime,
+          maxtime,
+          workmem,
+          rows_pre_filter,
+          bytes,
+          starttime,
+          endtime
+        FROM
+        history.hist_redshift_query_execution
       ;;
   }
 
@@ -162,6 +151,16 @@ view: redshift_query_execution {
   dimension: bytes {
     type: number
     sql:  ${TABLE}.bytes ;;
+  }
+
+  dimension: starttime {
+    type: date
+    sql: ${TABLE}.starttime ;;
+  }
+
+  dimension: endtime {
+    type: date
+    sql: ${TABLE}.endtime ;;
   }
 
   # MEASURES #
