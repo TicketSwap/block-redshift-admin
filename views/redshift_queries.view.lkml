@@ -17,7 +17,7 @@ view: redshift_queries {
         total_queue_time,
         total_exec_time,
         elapsed, --Hmm.. this measure seems to be greater than queue_time+exec_time,
-        row_number() OVER(ORDER BY starttime) as pk
+        row_number() OVER(ORDER BY query, starttime) as pk
       FROM history.hist_redshift_query_view
       -- WHERE start_time >= dateadd(day,-1,GETDATE())
       -- AND start_time <= GETDATE()
@@ -30,7 +30,6 @@ view: redshift_queries {
 
     dimension: pk {
       primary_key: yes
-      hidden:  yes
       sql: ${TABLE}.pk ;;
     }
 
