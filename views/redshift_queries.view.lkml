@@ -17,10 +17,10 @@ view: redshift_queries {
         total_queue_time,
         total_exec_time,
         elapsed, --Hmm.. this measure seems to be greater than queue_time+exec_time,
-        pk
+        row_number() OVER(ORDER BY starttime) as pk
       FROM history.hist_redshift_query_view
-      WHERE start_time >= dateadd(day,-1,GETDATE())
-      AND start_time <= GETDATE()
+      -- WHERE start_time >= dateadd(day,-1,GETDATE())
+      -- AND start_time <= GETDATE()
     ;;
     #STL_QUERY vs SVL_QLOG. STL_QUERY has more characters of query text (4000), but is only retained for "2 to 5 days"
     # STL_WLM_QUERY or SVL_QUERY_QUEUE_INFO? http://docs.aws.amazon.com/redshift/latest/dg/r_SVL_QUERY_QUEUE_INFO.html
