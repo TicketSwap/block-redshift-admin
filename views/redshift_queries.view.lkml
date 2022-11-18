@@ -7,7 +7,7 @@ view: redshift_queries {
     sql: SELECT DISTINCT
         query,
         snippet,
-        pdt
+        pdt,
         looker_user_id,
         looker_history_id,
         looker_instance_slug,
